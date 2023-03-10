@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django.contrib.admin import register
 
-from .models import Cart, Favorite, Ingredient, Recipe, Tag, IngredientAmount, TagRecipe
+from .models import (Cart, Favorite, Ingredient,
+                     Recipe, Tag, IngredientAmount, TagRecipe)
 
 
 class IngredientAmountAdminInLine(admin.TabularInline):
@@ -42,8 +43,10 @@ class RecipeAdmin(admin.ModelAdmin):
     def in_cart_count(self, obj):
         return obj.cart.count()
 
-    in_favorite_count.short_description = 'Пользователей, добавили в избранное:'
-    in_cart_count.short_description = 'Пользователей, добавили в корзину:'
+    in_favorite_count.short_description = (
+        'Пользователей, добавили в избранное:')
+    in_cart_count.short_description = (
+        'Пользователей, добавили в корзину:')
 
 
 @register(Ingredient)

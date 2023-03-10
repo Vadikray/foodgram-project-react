@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from djoser.views import UserViewSet
 from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
@@ -11,12 +12,60 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
 from api.filters import RecipeFilter, IngredientFilter
-from recipes.models import (Cart, Favorite, Ingredient, IngredientAmount, Recipe,
-                            Tag)
+from recipes.models import (Cart, Favorite, Ingredient, IngredientAmount,
+                            Recipe, Tag)
 from api.pagination import CastomPagination
-from api.permissions import RecipesPermissions
+from api.permissions import AuthorRecipeEditPermissions
 from api.serializers import (CropRecipeSerializer, IngredientSerializer,
-                             RecipeSerializer, TagSerializer)
+                             RecipeSerializer, TagSerializer, FollowSerializer,
+                             FollowListSerializer)
+from users.models import Follow, User
+
+
+class CustomUserViewSet(UserViewSet):
+    pagination_class = CastomPagination
+
+    @action(methods=['post', 'delete'],
+            detail=True,
+            permission_classes=[IsAuthenticated]
+            )
+    def subscribe(self, request, id=None):
+        """Подписка на пользователя"""
+
+        if request.method != 'POST':
+            subscription = get_object_or_404(
+                Follow,
+                author=get_object_or_404(User, id=id),
+                user=request.user
+            )
+            self.perform_destroy(subscription)
+
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        serializer = FollowSerializer(
+            data={
+                'user': request.user.id,
+                'author': get_object_or_404(User, id=id).id
+            },
+            context={'request': request}
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    @action(detail=False, permission_classes=[IsAuthenticated])
+    def subscriptions(self, request):
+        """Показывает все подписки пользователя"""
+
+        queryset = User.objects.filter(following__user=request.user)
+        pages = self.paginate_queryset(queryset)
+        serializer = FollowListSerializer(
+            pages,
+            many=True,
+            context={'request': request}
+        )
+        return self.get_paginated_response(serializer.data)
 
 
 class TagsViewSet(ReadOnlyModelViewSet):
@@ -37,7 +86,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     pagination_class = CastomPagination
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
-    permission_classes = (RecipesPermissions,)
+    permission_classes = (AuthorRecipeEditPermissions,)
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
@@ -49,9 +98,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
         if request.method == 'POST':
             return self.add_obj(Favorite, request.user, pk)
-        elif request.method == 'DELETE':
-            return self.delete_obj(Favorite, request.user, pk)
-        return None
+
+        return self.delete_obj(Favorite, request.user, pk)
 
     @action(detail=True, methods=['post', 'delete'],
             permission_classes=[IsAuthenticated])
@@ -60,9 +108,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
         if request.method == 'POST':
             return self.add_obj(Cart, request.user, pk)
-        elif request.method == 'DELETE':
-            return self.delete_obj(Cart, request.user, pk)
-        return None
+
+        return self.delete_obj(Cart, request.user, pk)
 
     @action(detail=False, methods=['get'],
             permission_classes=[IsAuthenticated])
