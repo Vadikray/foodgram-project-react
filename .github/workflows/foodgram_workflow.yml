@@ -57,7 +57,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           passphrase: ${{ secrets.PASSPHRASE }}
           script: |
-            sudo docker pull vadikray/foodgram_frontend:v1.0
+            sudo docker pull vadikray/foodgram_frontend:latest
             sudo docker pull vadikray/foodgram_backend:latest
             sudo docker compose stop
             sudo docker compose rm backend
