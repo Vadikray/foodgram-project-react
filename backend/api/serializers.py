@@ -245,7 +245,7 @@ class FollowSerializer(serializers.ModelSerializer):
         if Follow.objects.filter(
                 user=self.context['request'].user,
                 author=data['author']
-        ):
+        ).exists():
             raise serializers.ValidationError({
                 'errors': 'Уже подписан.'
             })
