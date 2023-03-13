@@ -42,7 +42,7 @@ jobs:
           context: ./backend
           file: ./backend/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/foodgram_backend:latest
+          tags: vadikray/foodgram_backend:latest
 
   deploy:
     runs-on: ubuntu-latest
@@ -57,8 +57,8 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           passphrase: ${{ secrets.PASSPHRASE }}
           script: |
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/foodgram_frontend:v1.0
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/foodgram_backend:v1.0
+            sudo docker pull vadikray/foodgram_frontend:latest
+            sudo docker pull vadikray/foodgram_backend:latest
             sudo docker compose stop
             sudo docker compose rm backend
             sudo docker compose rm frontend
