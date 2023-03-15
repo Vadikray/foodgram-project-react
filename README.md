@@ -1,5 +1,5 @@
 # Foodgram ![Foodgram Status](https://github.com/vadikray/foodgram-project-react/actions/workflows/foodgram_workflow.yml/badge.svg?branch=master&event=push)
-## Документация проекта: http://84.252.142.25/redoc/
+## Документация проекта: http://84.252.142.25/api/docs/
 
 ## Описание
 
