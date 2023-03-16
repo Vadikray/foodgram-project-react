@@ -36,6 +36,7 @@ docker-compose exec backend python manage.py load_ingredients
 
 Шаблон наполнения .env
 ```
+
 DB_ENGINE=django.db.backends.postgresql 
 DB_NAME=postgres
 POSTGRES_USER=postgres
@@ -44,6 +45,7 @@ DB_HOST=db
 DB_PORT=5432
 DJANGO_KEY=&25k@3hm-s1d)5c-zu3_45ycih+!5&717(b$*d)zg341xo#p$e
 ```
+
 Данные для проверки работы приложения: Суперпользователь:
 ```
 username admin
