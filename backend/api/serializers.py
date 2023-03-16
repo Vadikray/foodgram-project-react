@@ -137,11 +137,6 @@ class RecipeSerializer(serializers.ModelSerializer):
         return Recipe.objects.filter(cart__user=user, id=obj.id).exists()
 
     def validate(self, data):
-        recipe_name = self.initial_data.get('name')
-        user = self.context['request'].user
-        if Recipe.objects.filter(name=recipe_name, author=user).exists():
-            raise serializers.ValidationError({
-                'error': ' Вас есть такой рецепт'})
         ingredients = self.initial_data.get('ingredients')
         if not ingredients:
             raise serializers.ValidationError({

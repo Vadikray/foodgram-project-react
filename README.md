@@ -1,5 +1,5 @@
 # Foodgram ![Foodgram Status](https://github.com/vadikray/foodgram-project-react/actions/workflows/foodgram_workflow.yml/badge.svg?branch=master&event=push)
-## Документация проекта: http://84.252.142.25/api/docs/
+## Документация проекта: http://130.193.42.203/api/docs/
 
 ## Описание
 
@@ -23,6 +23,10 @@ docker-compose up -d --build
 docker-compose exec web python manage.py migrate
 docker-compose exec web python manage.py createsuperuser
 docker-compose exec web python manage.py collectstatic --no-input 
+```
+Команда для заполнения базы данными 
+```
+docker-compose exec web python manage.py loaddata fixtures.json
 ```
 Команда для заполнения базы ингредиентов
 ```

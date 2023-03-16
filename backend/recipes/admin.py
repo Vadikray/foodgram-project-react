@@ -19,7 +19,9 @@ class TagRecipeAdminInLine(admin.TabularInline):
 class RecipeAdmin(admin.ModelAdmin):
     """Настройки админ панели для модели рецептов"""
 
-    list_display = ('id', 'name', 'author', 'cooking_time')
+    list_display = ('id', 'name', 'author',
+                    'cooking_time', 'pub_date'
+                    )
     search_fields = ('name',)
     list_filter = ('tags', 'name', 'author')
     inlines = (IngredientAmountAdminInLine, TagRecipeAdminInLine)
