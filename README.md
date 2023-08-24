@@ -53,5 +53,5 @@ email: admin@gmail.com
 password: admin
 ```
 
-# Автор:
----Конюшков В.А.---
+## Автор
+[Конюшков В.А.](https://t.me/Vadikray)
